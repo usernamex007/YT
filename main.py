@@ -12,13 +12,12 @@ app = Client("youtube_cookies_bot", api_id=API_ID, api_hash=API_HASH, bot_token=
 
 async def get_youtube_cookies():
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=False)  # Set to True for headless mode
+        browser = await p.chromium.launch(headless=True)  # Headless mode enabled
         context = await browser.new_context()
         page = await context.new_page()
 
         await page.goto("https://www.youtube.com/")
-
-        input("Please log in to YouTube and press Enter...")
+        await asyncio.sleep(10)  # Allow some time for page load
 
         cookies = await context.cookies()
         await browser.close()
@@ -37,6 +36,6 @@ async def send_cookies(client, message):
 
     await message.reply_document("youtube_cookies.json", caption="Here are your YouTube cookies!")
 
-    await message.reply_text(f"Cookies Extracted Successfully! ✅")
+    await message.reply_text("Cookies Extracted Successfully! ✅")
 
 app.run()
